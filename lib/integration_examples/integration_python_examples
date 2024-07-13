@@ -1,0 +1,14 @@
+import ctypes
+
+# Загружаем скомпилированную библиотеку
+lib = ctypes.CDLL('./lib.so')
+
+# Определяем возвращаемый тип для функции hello_world
+lib.hello_world.restype = ctypes.c_char_p
+
+# Вызываем функцию и выводим результат
+result = lib.hello_world()
+print(result.decode('utf-8'))
+
+# Освобождаем память, выделенную для строки
+lib.free_c_string(result)
