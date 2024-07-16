@@ -1,10 +1,13 @@
 [package]
-name = "lib"
+name = "rlib"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-
+rand = "0.8"
+argon2 = "0.5.3"
+rand_core = "0.6"
+bcrypt = "0.15.1"
 
 [lib]
 crate-type = ["cdylib"]
