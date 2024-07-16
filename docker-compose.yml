@@ -7,7 +7,14 @@ services:
       dockerfile: Dockerfile
     container_name: music_player_backend
     environment:
-      - DATABASE_URL=postgresql://user:password@db:5432/musicdb
+      - DOCKER_API_VERSION=1.40
+      - ENVIRONMENT=development
+      - DB_USER=postgres
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=musicdb
+      - DB_PASS=1111
+      - DATABASE_URL=postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}
     volumes:
       - ./backend:/app
     ports:
@@ -31,6 +38,7 @@ services:
     image: postgres:13
     container_name: music_player_db
     environment:
+      DOCKER_API_VERSION: 1.40
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
       POSTGRES_DB: musicdb

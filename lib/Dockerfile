@@ -2,7 +2,7 @@
 FROM rust:1.60 as builder
 
 # Устанавливаем рабочую директорию
-WORKDIR /usr/src/my_rust_library
+WORKDIR /usr/src/lib
 
 # Копируем файлы проекта
 COPY . .
@@ -17,7 +17,7 @@ FROM debian:buster-slim
 COPY --from=builder /usr/src/my_rust_library/target/release/libmy_rust_library.so /usr/local/lib/libmy_rust_library.so
 
 # Устанавливаем рабочую директорию
-WORKDIR /usr/src/my_rust_library
+WORKDIR /usr/src/lib
 
 # Копируем исходные файлы (для тестов и примеров)
 COPY . .

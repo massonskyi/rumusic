@@ -1,26 +1,26 @@
 # Указываем базовый образ
-FROM node:16
+FROM node:14-alpine
 
 # Устанавливаем рабочую директорию в контейнере
-WORKDIR /app
+WORKDIR /rumusic/frontend/
 
-# Копируем package.json и yarn.lock в контейнер
-COPY package.json yarn.lock ./
+# Copy package.json and package-lock.json to the working directory
+COPY package*.json ./
 
-# Устанавливаем зависимости
-RUN yarn install
+# Install dependencies
+RUN npm install
 
-# Копируем весь проект в контейнер
+# Install serve if not present
+RUN npm install -g serve
+
+# Copy the remaining application code to the working directory
 COPY . .
 
-# Создаем сборку проекта
-RUN yarn build
+# Build your React app
+RUN npm run build
 
-# Открываем порт для сервера
-EXPOSE 3000
+# Expose port 5000 to allow outside access to the app
+EXPOSE 5000
 
-# Устанавливаем сервер для обслуживания статических файлов
-RUN yarn global add serve
-
-# Команда для запуска сервера
+# Command to run the app
 CMD ["serve", "-s", "build"]
