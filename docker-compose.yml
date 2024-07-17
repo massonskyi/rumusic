@@ -3,20 +3,19 @@ version: '3.8'
 services:
   backend:
     build:
-      context: ./backend
+      context: backend_engine
       dockerfile: Dockerfile
     container_name: music_player_backend
     environment:
-      - DOCKER_API_VERSION=1.40
       - ENVIRONMENT=development
-      - DB_USER=postgres
-      - DB_HOST=db
+      - DB_USER=user
+      - DB_HOST=music_player_db
       - DB_PORT=5432
       - DB_NAME=musicdb
       - DB_PASS=1111
       - DATABASE_URL=postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}
     volumes:
-      - ./backend:/app
+      - ./backend_engine:/app
     ports:
       - "8000:8000"
     depends_on:
@@ -38,9 +37,8 @@ services:
     image: postgres:13
     container_name: music_player_db
     environment:
-      DOCKER_API_VERSION: 1.40
       POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
+      POSTGRES_PASSWORD: 1111
       POSTGRES_DB: musicdb
     volumes:
       - pgdata:/var/lib/postgresql/data

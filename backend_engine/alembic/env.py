@@ -13,8 +13,8 @@ from app.core import DB_HOST, DB_PORT, DB_USER, DB_NAME, DB_PASS
 from app.modules.users.models import metadata
 
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-# from backend.app.core.config import load_config
-# from backend.app.db.base import Base
+# from backend_engine.app.core.config import load_config
+# from backend_engine.app.db.base import Base
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

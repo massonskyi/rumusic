@@ -26,7 +26,7 @@ role = Table(
     Column("permissions", JSON),
 )
 
-user = Table(
+users = Table(
     "user",
     metadata,
     Column("id", Integer, primary_key=True),
@@ -64,7 +64,6 @@ class User(SQLAlchemyBaseUserTable[int], Base):
     is_verified: Column = Column(Boolean, default=False, nullable=False)
     storage: str = Column(String)
 
-    # Relationships
     tracks = Column(JSON)
     playlists = Column(JSON)
 
