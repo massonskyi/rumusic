@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: backend_main
+      dockerfile: Dockerfile
+    container_name: backend_main
+    depends_on:
+      - db
+    volumes:
+      - ./backend_main:/app
+    environment:
+      - ENVIRONMENT=development
+      - DB_USER=user
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=musicdb
+      - DB_PASS=1111
+      - DATABASE_URL=postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}
+    ports:
+      - "8080:8080"
+    command: >
+      /bin/sh -c "
+        while ! nc -z db 5432; do
+          echo waiting for database;
+          sleep 2;
+        done;
+        diesel migration run --database-url postgres://${DB_USER}:${DB_PASS}@${DB_HOST}:${DB_PORT}/${DB_NAME} &&
+        ./your_application
+      "
+  frontend:
+    build:
+      context: frontend_main
+      dockerfile: Dockerfile
+    container_name: frontend_main
+    volumes:
+      - ./frontend_main:/app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+  db:
+    image: postgres:13
+    container_name: database_main
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: 1111
+      POSTGRES_DB: musicdb
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
