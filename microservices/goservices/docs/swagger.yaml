@@ -1,0 +1,50 @@
+basePath: /
+definitions:
+  ytdwnld.DownloadRequest:
+    properties:
+      url:
+        type: string
+    type: object
+  ytdwnld.DownloadResponse:
+    properties:
+      file_path:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: This is a sample server for downloading YouTube videos.
+  title: YouTube Downloader API
+  version: "1.0"
+paths:
+  /download:
+    post:
+      consumes:
+      - application/json
+      description: Download a video from YouTube using the provided URL
+      parameters:
+      - description: Download Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/ytdwnld.DownloadRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ytdwnld.DownloadResponse'
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Download a video from YouTube
+      tags:
+      - download
+swagger: "2.0"
