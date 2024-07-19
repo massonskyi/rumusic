@@ -9,7 +9,7 @@ use tokio::sync::RwLock;
 use super::{claims::Claims, manager::UserManager};
 
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct SignUpRequest{
     name: String, 
     surname: String, 
@@ -22,7 +22,17 @@ pub struct SignUpRequest{
 }
 
 
-
+#[utoipa::path(
+    post,
+    path = "/sign_up",
+    request_body = SignUpRequest,
+    responses(
+        (status = 200, description = "Successful response", body = String), // JWT token as a string
+        (status = 401, description = "Unauthorized response", body = String),
+        (status = 403, description = "Forbidden response", body = String),
+        (status = 500, description = "Internal server error", body = String)
+    )
+)]
 pub async fn signup(
     // Login Request: web::Json<LoginRequest> -> impl Responder
     user_manager: web::Data<Arc<RwLock<UserManager>>>, 
@@ -30,7 +40,10 @@ pub async fn signup(
 ) -> impl Responder{
 
     let hashed_password = match hash(&req.password, 10) {
-        Ok(hashed) => hashed,
+        Ok(hashed) => {
+            println!("{}", hashed);
+            hashed
+        },
         Err(_) => return HttpResponse::InternalServerError().finish(),
     };
 
@@ -39,7 +52,7 @@ pub async fn signup(
     let email = req.email.clone();
     let role = req.role.clone();
     let avatar = req.avatar.clone();
-
+    println!("{username} {email} {role}, {avatar} {0} {1} {2}", req.name.clone(),req.surname.clone(), req.age);
     // Obtain mutable access to UserManager
     let mut manager = user_manager.write().await;
 
@@ -72,7 +85,7 @@ pub async fn signup(
         Ok(t) => t,
         Err(_) => return HttpResponse::InternalServerError().finish(),
     };
-
+    println!("{token}");
     // Return token as JSON response
     HttpResponse::Ok().json(token)
 }

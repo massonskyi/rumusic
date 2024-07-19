@@ -17,7 +17,8 @@ services:
       - DB_PORT=5432
       - DB_NAME=musicdb
       - DB_PASS=1111
-      - DATABASE_URL=postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}
+#      - DATABASE_URL=postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}
+      - DATABASE_URL=postgres://user:1111@db:5432/musicdb
     ports:
       - "8080:8080"
     command: >
@@ -26,8 +27,9 @@ services:
           echo waiting for database;
           sleep 2;
         done;
+        cd /usr/src/app && ls /usr/local/bin/ &&
         diesel migration run --database-url postgres://${DB_USER}:${DB_PASS}@${DB_HOST}:${DB_PORT}/${DB_NAME} &&
-        ./your_application
+        cd /usr/local/bin/ && export HOST=$(hostname -i) && ./backend_main
       "
   frontend:
     build:
@@ -50,6 +52,17 @@ services:
       POSTGRES_DB: musicdb
     volumes:
       - pgdata:/var/lib/postgresql/data
-
+      
+  swagger:
+    build:
+      context: backend_main/swagger-ui/
+      dockerfile: Dockerfile
+    container_name: swagger_ui
+    environment:
+      - API_URL=http://172.18.0.3:8080/api-doc/openapi.json
+    ports:
+      - "8081:8080"
+    depends_on:
+      - backend
 volumes:
   pgdata:

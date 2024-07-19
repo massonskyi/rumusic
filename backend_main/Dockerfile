@@ -24,6 +24,7 @@ RUN apt-get update && apt-get install -y libpq-dev netcat-openbsd
 
 # Копируем бинарный файл из первого этапа
 COPY --from=builder /usr/src/app/target/release/backend_main /usr/local/bin/backend_main
+
 # Копируем Diesel CLI из предыдущего шага
 COPY --from=builder /usr/local/cargo/bin/diesel /usr/local/bin/
 
@@ -31,10 +32,10 @@ COPY --from=builder /usr/local/cargo/bin/diesel /usr/local/bin/
 #COPY --from=builder /usr/src/app/.env /usr/src/app/.env
 
 # Копируем файлы проекта для выполнения миграций
-COPY --from=builder /usr/src/app /app
+COPY --from=builder /usr/src/app /usr/src/app
 
 # Устанавливаем рабочую директорию
-WORKDIR /app
+WORKDIR /usr/src/app
 
 # Запуск приложения
 CMD ["sh", "-c", "export HOST=$(hostname -i) && backend_main"]

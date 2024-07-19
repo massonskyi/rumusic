@@ -1,14 +1,14 @@
 use std::sync::Arc;
 
-use actix_web::{web, HttpResponse, Responder};
+use actix_web::{get, web, HttpResponse, Responder};
 
 use serde::{Deserialize, Serialize};
 use tokio::sync::RwLock;
 
 use super::{manager::UserManager, signin, signup};
 
-#[derive(Debug, Serialize, Deserialize)]
-struct CreateUserRequest{
+#[derive(Debug, Serialize, Deserialize,utoipa::ToSchema)]
+pub struct CreateUserRequest{
     name: String,
     surname: String,
     age: i32,
@@ -17,6 +17,11 @@ struct CreateUserRequest{
     password: String,
     role: String,
     avatar: String,
+}
+
+#[derive(serde::Serialize, utoipa::ToSchema)]
+pub struct Greeting {
+    message: String,
 }
 
 pub fn init(cfg: &mut web::ServiceConfig){
@@ -32,14 +37,30 @@ pub fn init(cfg: &mut web::ServiceConfig){
         web::resource("users")
         .route(web::get().to(get_users))
         .route(web::post().to(create_user))
-        // .route(web::get().to(get_user))
+        .route(web::get().to(get_user))
     );
 }
+#[utoipa::path(
+    get,
+    path = "/users",
+    responses(
+        (status = 200, description= "successful response", body=UserManager)
+    )
+)]
 
+// #[get("/users")]
 async fn get_users(data: web::Data<UserManager>) -> impl Responder{
     let users = data.list_users().await;
     HttpResponse::Ok().json(users)
 }
+#[utoipa::path(
+    post,
+    path = "/users",
+    request_body = CreateUserRequest,
+    responses(
+        (status = 200, description = "successful response", body = User)
+    )
+)]
 async fn create_user(data: web::Data<Arc<RwLock<UserManager>>>, req: web::Json<CreateUserRequest>) -> impl Responder {
     let mut manager = data.write().await;
     match manager.create_user(
@@ -57,7 +78,17 @@ async fn create_user(data: web::Data<Arc<RwLock<UserManager>>>, req: web::Json<C
     }
 }
 
-
+#[utoipa::path(
+    get,
+    path = "/users/{id}",
+    params(
+        ("id" = i32, Path, description = "User ID")
+    ),
+    responses(
+        (status = 200, description = "successful response", body = User),
+        (status = 404, description = "User not found")
+    )
+)]
 async fn get_user(data: web::Data<Arc<RwLock<UserManager>>>, path: web::Path<(i32,)>) -> impl Responder {
     let manager = data.read().await;
     let user_id = path.0;
