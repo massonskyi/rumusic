@@ -1,0 +1,3 @@
+[submodule "microservices/microservices/swagger-ui"]
+	path = microservices/microservices/swagger-ui
+	url = https://github.com/swagger-api/swagger-ui.git
