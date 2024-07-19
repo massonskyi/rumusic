@@ -62,7 +62,12 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         App::new()
             .app_data(web::Data::new(user_manager.clone()))
-            .wrap(Cors::default().allow_any_origin().allow_any_method().allow_any_header())
+            .wrap(
+                Cors::default()
+                .allow_any_origin()
+                .allow_any_method()
+                .allow_any_header()
+            )
             .configure(modules::auth::handler::init)
             .route("/", web::get().to(index))
             .configure(track_routes::init)
