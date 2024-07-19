@@ -19,13 +19,13 @@ pub struct LoginRequest {
     request_body = LoginRequest,
     path = "/sign_in",
     responses(
-        (status = 200, description= "successful response", body=UserManager),
+        (status = 200, description= "successful response", body=LoginRequest),
         (status = 401, description= "unauthorized response", body=String),
         (status = 403, description= "forbidden response", body=String),
         (status = 500, description= "internal server error", body=String),
     )
 )]
-pub async fn signin(
+pub async fn sign_in(
     user_manager: web::Data<Arc<RwLock<UserManager>>>, 
     req: web::Json<LoginRequest>
 ) -> impl Responder {

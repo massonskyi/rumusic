@@ -6,6 +6,7 @@ use tokio_postgres::{Client, Error, NoTls};
 use tokio::{self, sync::Mutex};
 use serde_json::Value; 
 use utoipa::ToSchema;
+
 #[derive(utoipa::ToSchema)]
 pub struct UserManager {
     pool: Arc<Mutex<Client>>,
@@ -80,16 +81,15 @@ impl UserManager {
         let stmt = client.prepare(&query).await.unwrap();
         
         let row = client
-            .query_one(
-                &stmt,
-                &[
-                    &name, &surname, &age, &username, &email, &hash_password, &now, &now, &role,
-                    &avatar, &user.status, &user.token, &user.bio, &user.favorite_genres.join(","),
-                    &now,
-                ],
-            )
-            .await
-            .unwrap();
+        .query_one(
+            &stmt,
+            &[
+                &name, &surname, &age, &username, &email, &hash_password, &now, &now, &role,
+                &avatar, &user.status, &user.token, &user.bio, &user.favorite_genres.join(","),
+                &now,
+            ],
+        )
+        .await.map_err(|e| format!("Failed to execute query: {}", e))?;
 
         let id: i32 = row.get(0);
         Ok(UserModel { id, ..user })

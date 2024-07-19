@@ -5,7 +5,7 @@ use actix_web::{get, web, HttpResponse, Responder};
 use serde::{Deserialize, Serialize};
 use tokio::sync::RwLock;
 
-use super::{manager::UserManager, signin, signup};
+use super::{manager::UserManager, sign_in, sign_up};
 
 #[derive(Debug, Serialize, Deserialize,utoipa::ToSchema)]
 pub struct CreateUserRequest{
@@ -26,18 +26,16 @@ pub struct Greeting {
 
 pub fn init(cfg: &mut web::ServiceConfig){
     cfg.service(
-        web::resource("/signup")
-        .route(web::post().to(signup::signup)),
-    );
-    cfg.service(
-        web::resource("/signin")
-        .route(web::post().to(signin::signin))
-    );
-    cfg.service(
         web::resource("users")
         .route(web::get().to(get_users))
         .route(web::post().to(create_user))
         .route(web::get().to(get_user))
+    )
+    .route("/sign_up", 
+        web::post().to(sign_up::sign_up)
+    )
+    .route("sign_in",
+        web::post().to(sign_in::sign_in)
     );
 }
 #[utoipa::path(

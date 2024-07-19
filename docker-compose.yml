@@ -62,7 +62,7 @@ services:
       - API_URL=http://172.18.0.3:8080/api-doc/openapi.json
     ports:
       - "8081:8080"
-    depends_on:
-      - backend
+#    depends_on:
+#      - backend
 volumes:
   pgdata:

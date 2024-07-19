@@ -6,5 +6,6 @@ file = "src/schema.rs"
 custom_type_derives = ["diesel::query_builder::QueryId", "Clone"]
 
 [migrations_directory]
-#dir = "/home/user064/repo/backend_main/migrations"
-dir = "/usr/src/app/migrations" # change it for working on docker\desktop pc
+# dir = "/home/user064/repo/backend_main/migrations"
+dir = "/home/user064/PycharmProjects/rumusic/backend_main/migrations"
+# dir = "/usr/src/app/migrations" # change it for working on docker\desktop pc

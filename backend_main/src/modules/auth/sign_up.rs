@@ -33,7 +33,7 @@ pub struct SignUpRequest{
         (status = 500, description = "Internal server error", body = String)
     )
 )]
-pub async fn signup(
+pub async fn sign_up(
     // Login Request: web::Json<LoginRequest> -> impl Responder
     user_manager: web::Data<Arc<RwLock<UserManager>>>, 
     req: web::Json<SignUpRequest>
