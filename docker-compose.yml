@@ -55,7 +55,7 @@ services:
       
   swagger:
     build:
-      context: backend_main/swagger-ui/
+      context: microservices/swagger-ui/
       dockerfile: Dockerfile
     container_name: swagger_ui
     environment:
