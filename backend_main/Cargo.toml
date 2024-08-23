@@ -9,7 +9,7 @@ actix-web-httpauth = "0.8.2"
 actix-files = "0.6"  # or your current version
 bcrypt = "0.15.1"
 chrono = "0.4.38"
-diesel = {version="2.2.1", features = ["postgres", "r2d2"] }
+diesel = {version="2.2.3", features = ["postgres", "r2d2"] }
 dotenvy = "0.15.7"
 jsonwebtoken = "9.3.0"
 rand = "0.8.5"
